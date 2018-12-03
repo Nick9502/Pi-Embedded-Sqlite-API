@@ -7,9 +7,9 @@ var express = require('express');
 var sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
+const app = express();
 const dbPath = path.resolve(__dirname, 'embeddedPi.db')
 const port = process.env.PORT || 3000;
-const app = express();
 app.use(bodyParser.json());
 
 const db = new sqlite3.Database(dbPath, (err) => {
@@ -34,6 +34,28 @@ app.get('/user/:username',(req, res) => {
 		}
 	  }
 	);
+});
+
+app.post('/user/signup',(req, res) => {
+	db.run(
+		"INSERT INTO hashManager VALUES ($site, $username, $password,$function,$performance,date('now'),time('now'))",
+		// parameters to SQL query:
+		{
+		  $site: req.body.site,
+		  $username: req.body.username,
+		  $password: req.body.password,
+		  $function: req.body.password,
+		  $performance: req.body.performance,
+		},
+		// callback function to run when the query finishes:
+		(err) => {
+		  if (err) {
+			res.send({message: 'error in app.post(/users)'});
+		  } else {
+			res.send({message: 'successfully run app.post(/users)'});
+		  }
+		}
+	  );
 });
  
 app.listen(port, () => {

@@ -1,0 +1,25 @@
+{
+  "name": "pi-embedded-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "benchmark": "^2.1.4",
+    "bluebird": "^3.5.3",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.4.0",
+    "moment": "^2.22.2",
+    "moment-timezone": "^0.5.23",
+    "sequelize": "^4.41.2",
+    "sqlite3": "^4.0.4",
+    "swagger-ui-express": "^4.0.1",
+    "sync-request": "^6.0.0",
+    "uuid": "^3.3.2"
+  }
+}

@@ -1,22 +1,20 @@
 var bodyParser = require('body-parser');
-
-var {sequelize} = require('./config/sequelize')
-var {HashData} = require('./models/HashData')
-var {User} = require('./models/user')
 var express = require('express');
 var sqlite3 = require('sqlite3').verbose();
 const path = require('path');
-
+const cors = require('cors')
 const app = express();
 const dbPath = path.resolve(__dirname, 'embeddedPi.db')
 const port = process.env.PORT || 3000;
+
 app.use(bodyParser.json());
+app.use(cors())
 
 const db = new sqlite3.Database(dbPath, (err) => {
 	if (err) {
 	  console.error(err.message);
 	}
-	console.log('Connected to the chinook database.');
+	console.log('Connected to SQLite Database Successfully');
   });
 
 app.get('/user/:username',(req, res) => {
@@ -37,25 +35,15 @@ app.get('/user/:username',(req, res) => {
 });
 
 app.post('/user/signup',(req, res) => {
-	db.run(
-		"INSERT INTO hashManager VALUES ($site, $username, $password,$function,$performance,date('now'),time('now'))",
-		// parameters to SQL query:
-		{
-		  $site: req.body.site,
-		  $username: req.body.username,
-		  $password: req.body.password,
-		  $function: req.body.password,
-		  $performance: req.body.performance,
-		},
-		// callback function to run when the query finishes:
-		(err) => {
-		  if (err) {
-			res.send({message: 'error in app.post(/users)'});
-		  } else {
-			res.send({message: 'successfully run app.post(/users)'});
-		  }
-		}
-	  );
+	console.log(req.body);
+	site = req.body.site;
+	username = req.body.username;
+	password= req.body.password;
+	hashFunc = req.body.hashFunc
+	performance=req.body.performance;
+	var stmt = db.prepare("INSERT INTO hashManager(site,username,password,hashFunc,performance,currentdate,currentime) VALUES (?,?,?,?,?,date('now'),time('now'))")
+	stmt.run(site,username,password,hashFunc,performance)
+	stmt.finalize();
 });
  
 app.listen(port, () => {
